@@ -46,6 +46,6 @@ if __name__ == "__main__":
 
     df = generate_security_logs()
 
-    df.to_csv("data/security_logs.csv", index=False)
+    df.to_csv("data/logs.csv", index=False)
 
-    print("Dataset saved to data/security_logs.csv")
+    print("Dataset saved to data/logs.csv")
