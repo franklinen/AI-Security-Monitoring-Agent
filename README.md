@@ -1,238 +1,218 @@
 # AI-Security-Monitoring-Agent
 
-This project implements an intelligent agent that monitors security logs and learns to detect suspicious activity.
+An agent-based cybersecurity system that uses machine learning to detect threats in network logs and autonomously respond with security actions.
+
+## Project Overview
+
+This project implements an intelligent security agent that monitors network activity, detects potential cyber threats using a trained machine learning model, and takes appropriate actions such as blocking IPs or alerting administrators.
+
+The system follows a Perception → Reasoning → Action architecture inspired by modern agentic AI systems.
 
 ## Project Motivation
 
-Modern organizations generate massive volumes of security logs from authentication systems, network devices, and application servers. Security analysts are often overwhelmed by the number of alerts and events they must review, making it difficult to detect genuine threats quickly. As cyberattacks become more sophisticated, there is increasing demand for automated systems capable of monitoring system activity and identifying suspicious behavior in real time.
+With the increasing volume of network traffic, manual monitoring is inefficient and error-prone. This project demonstrates how AI agents + machine learning can:
 
-This project explores how Agentic AI techniques can be used to develop an intelligent monitoring system that learns to detect malicious activity from streaming security logs. Instead of relying solely on static rule-based detection systems, the agent continuously learns from observed events and feedback signals to improve its decision-making over time.
+Automate intrusion detection
 
-The goal of this project is to design and evaluate an adaptive security monitoring agent that can:
+Reduce response time to threats
 
-Analyze system activity logs
+Provide scalable security monitoring
 
-Detect suspicious behaviors such as brute-force attacks or data exfiltration
+Simulate real-world cybersecurity workflows
 
-Learn optimal detection policies through interaction with an environment
+This aligns with real-world Security Operations Center (SOC) automation.
 
-Balance false positives and missed threats through a reward-driven learning strategy
 
-This project demonstrates how intelligent agents and reinforcement learning concepts can be applied to cybersecurity monitoring systems.
+## Agent Architecture
 
-## Agent Design
+The system is built using a modular agent-based design:
 
-The system is designed using a reinforcement learning agent framework, where an intelligent agent interacts with a simulated security environment.
-### Environment: 
-The environment generates security log events representing user activities within a system. Each event contains behavioral indicators such as authentication attempts, network activity, and abnormal system usage patterns. 
+Environment → Percepts → Threat Model → Agent → Actions
+Components:
 
-### State Representation:
+Environment (environment.py)
+Simulates incoming network log events
 
-Each log event is represented as a feature vector describing system activity:
+Percepts (percepts.py)
+Transforms raw logs into structured features
 
-failed_logins – number of failed authentication attempts
+Threat Model (threat_model.py)
+Machine learning model that predicts threat probability
 
-ip_risk – reputation score of the originating IP address
+Agent (agent.py)
+Makes decisions based on model outputs
 
-off_hours – whether the event occurred outside normal operating hours
+Actions (actions.py)
+Defines possible security responses
 
-unusual_port – indicator of unusual port access
+## System Workflow
 
-data_transfer_volume – normalized volume of data transferred
-
-location_change – whether login location differs from previous login
-
-These features represent the state observed by the agent.
-
-### Actions:  
-- 0 = Allow activity  
-- 1 = Flag activity
-
-### Reward Function:
-The reward system reflects the operational priorities of security monitoring systems.
-- True Positive = +10
-- True Negative = +2
-- False Positive = -3
-- False Negative = -10
-
-This reward structure penalizes missed attacks more heavily than false alarms, reflecting real-world cybersecurity risk management
+Network Logs (CSV)
+        ↓
+Feature Processing
+        ↓
+ML Threat Detection Model
+        ↓
+Agent Decision Engine
+        ↓
+Security Action (BLOCK / ALERT / IGNORE)
 
 ## Cyberattack Simulation
 
-To evaluate the agent's ability to detect malicious activity, the environment includes a cyberattack simulator that generates realistic threat scenarios.
+The system uses a dataset of network activity logs to simulate real-world cyber threats such as:
 
-Three common attack patterns are modeled:
+Unauthorized access attempts
 
-### Brute Force Attack
+Abnormal traffic spikes
 
-An attacker repeatedly attempts to guess login credentials.
+Suspicious login behavior
 
-Typical characteristics:
+Potential intrusion patterns
 
-- High number of failed login attempts
-
-- High IP risk score
-
-- Often occurs outside normal hours
-
-- Login attempts from new geographic locations
-
-### Port Scanning
-
-An attacker probes network services to identify vulnerabilities.
-
-Typical characteristics:
-
-Unusual port access
-
-Suspicious IP reputation
-
-Moderate login anomalies
-
-Elevated network activity
-
-### Data Exfiltration
-
-An attacker attempts to steal sensitive information.
-
-Typical characteristics:
-
-Large data transfer volumes
-
-Off-hours activity
-
-New login location
-
-Moderate IP risk
-
-The simulator mixes normal system activity and attack scenarios, producing a realistic dataset for training and evaluating the security monitoring agent.
+The agent processes each event sequentially and reacts in real time.
 
 ## Learning Strategy
 
-The project evaluates several agent strategies to demonstrate the effectiveness of adaptive learning in security monitoring.
+The threat detection model is trained using supervised machine learning:
 
-### Random Baseline Agent
+ - Model: Random Forest Classifier
 
-The baseline agent randomly classifies events as normal or suspicious. This provides a reference point for evaluating intelligent agents.
+ - Input: Network activity features
 
-Expected performance: approximately random classification.
+ - Output: Probability of malicious activity
 
-### Epsilon-Greedy Contextual Bandit Agent
+Key Steps:
 
-The primary learning agent uses an epsilon-greedy contextual bandit strategy.
+ - Data preprocessing and scaling
 
-The agent learns a policy that maps security event features to actions.
+ - Model training and validation
 
-Key properties:
-
-- Exploration: occasionally tests new actions
-
-- Exploitation: favors actions with historically higher rewards
-
-- Online learning: continuously updates policy during interaction
-
-This approach allows the agent to gradually improve its detection performance.
-
-### Upper Confidence Bound (UCB) Agent
-
-A second intelligent agent uses the Upper Confidence Bound (UCB) strategy.
-
-This algorithm balances exploration and exploitation by selecting actions based on both:
-
-expected reward
-
-uncertainty of previous observations
-
-The UCB agent tends to explore more systematically than the epsilon-greedy strategy.
-
+ - Performance evaluation using ROC-AUC
+ 
 ## Evaluation Results
 
-Agent performance is evaluated using several metrics commonly used in security monitoring systems.
+Example performance metrics:
 
-Classification Metrics
+Accuracy: ~95%
 
-The following metrics are computed:
+ROC-AUC: ~0.96
 
-- Accuracy – overall classification correctness
+Precision/Recall: High for attack detection
 
-- Precision – proportion of flagged events that were actual attacks
+Evaluation includes:
 
-- Recall (Detection Rate) – proportion of attacks successfully detected
+Confusion matrix
 
-High recall is particularly important for cybersecurity applications.
+Classification report
 
-### Confusion Matrix
+ROC curve analysis
 
-A confusion matrix is generated to visualize classification performance:
+## Project Structure
 
-- True Positives (attacks correctly flagged)
+AI-Security-Monitoring-Agent
+│
+├── data/
+│   └── logs.csv
+│
+├── models/
+│   ├── threat_model.pkl
+│   └── scaler.pkl
+│
+├── notebooks/
+│   ├── data_exploration.ipynb
+│   ├── model_training.ipynb
+│   └── model_evaluation.ipynb
+│
+├── src/
+│   ├── actions.py
+│   ├── agent.py
+│   ├── environment.py
+│   ├── percepts.py
+│   ├── threat_model.py
+│   └── run_agent.py
+│
+├── requirements.txt
+└── README.md
 
-- True Negatives (normal events correctly allowed)
+## Installation & Setup
+#### Clone Repository
 
-- False Positives (false alarms)
+git clone https://github.com/franklinen/AI-Security-Monitoring-Agent.git
+cd AI-Security-Monitoring-Agent
 
-- False Negatives (missed attacks)
+#### Install Dependencies
 
-### Learning Curve
+pip install -r requirements.txt
 
-The agent's cumulative reward is plotted over time to show learning progress.
 
-An improving reward curve indicates that the agent is learning better security detection policies.
+##Train Model
 
-### Agent Comparison
+####Run the notebook:
 
-Performance is compared across agents:
+notebooks/model_training.ipynb
 
-Agent	Expected Behavior
-Random Agent	No learning, random detection
-Bandit Agent	Learns detection policy
-UCB Agent	More structured exploration
+This generates:
 
-The intelligent agents demonstrate significantly improved detection performance compared to the baseline.
+models/threat_model.pkl
+models/scaler.pkl
 
-## Future Work
+####Run the Agent
 
-This project can be extended in several directions to build more advanced security monitoring systems.
+python src/run_agent.py
 
-### Integration with Real Security Datasets
+Example Output
 
-Future work could incorporate real-world intrusion detection datasets such as:
+BLOCK_IP
+ALERT_ADMIN
+IGNORE
+INVESTIGATE
 
-UNSW-NB15
+Each action corresponds to a detected threat level.
 
-NSL-KDD
+## 🧩 Key Features
 
-CICIDS datasets
+✅ Agent-based architecture
 
-This would allow the agent to be trained on realistic network traffic data.
+✅ Real-time threat detection simulation
 
-### Streaming Security Monitoring
+✅ Machine learning integration
 
-The system could be extended to process real-time log streams, enabling deployment as a live monitoring tool.
+✅ Modular and scalable design
 
-### Multi-Agent Security Systems
+✅ Production-style code organization
 
-Multiple agents could collaborate to detect different categories of threats, including:
+## 🔮 Future Work
 
-- network intrusion detection
+This project can be extended into a full-scale AI security platform:
 
-- insider threat detection
+🔹 Deep Learning (LSTM for sequential attack detection)
 
-- malware activity monitoring
+🔹 Reinforcement Learning for adaptive response strategies
 
-### LLM-Powered Security Analysis
+🔹 LLM integration for threat explanation
 
-Large language models could be integrated to analyze unstructured log messages and assist the agent in identifying complex attack patterns.
+🔹 Real-time streaming with Kafka
 
-### Dashboard and Visualization
+🔹 Dashboard for monitoring (Streamlit / Dash)
 
-A monitoring dashboard could be developed to display:
+🔹 Integration with SIEM tools
 
-- detected threats
+## 💡 Skills Demonstrated
 
-- alert statistics
+Machine Learning & Model Deployment
 
-- system activity patterns
+Agent-Based System Design
 
-This would allow security analysts to interact with the intelligent monitoring system.
+Python Software Engineering
+
+Cybersecurity Analytics
+
+Data Preprocessing & Feature Engineering
+
+End-to-End ML Pipeline Development
+
+## 👤 Author
+
+Frankline Ononiwu
+Senior Machine Learning Engineer | Data Scientist
 
