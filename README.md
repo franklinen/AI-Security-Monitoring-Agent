@@ -127,6 +127,7 @@ AI-Security-Monitoring-Agent
 │   ├── actions.py
 │   ├── agent.py
 │   ├── environment.py
+|	|-- log_generator.py
 │   ├── percepts.py
 │   ├── threat_model.py
 │   └── run_agent.py
