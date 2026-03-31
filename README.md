@@ -28,6 +28,10 @@ This aligns with real-world Security Operations Center (SOC) automation.
 The system is built using a modular agent-based design:
 
 Environment → Percepts → Threat Model → Agent → Actions
+
+Log Event → Percept → Random Forest (threat probability) 
+         → Bayesian Network (contextual reasoning) 
+         → Agent Decision → Action (BLOCK/ALERT/INVESTIGATE/IGNORE)
 Components:
 
 Environment (environment.py)

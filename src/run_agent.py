@@ -1,4 +1,10 @@
+from environment import SecurityEnvironment
+from agent import SecurityAgent
+from threat_model import ThreatModel
+
 env = SecurityEnvironment("logs.csv")
+
+model = ThreatModel()
 
 agent = SecurityAgent(model)
 
