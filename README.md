@@ -2,10 +2,6 @@
 
 An intelligent agent-based cybersecurity system that monitors network log events, detects threats using a two-stage AI reasoning pipeline, and autonomously responds with calibrated security actions.
 
-> **Course:** 3547 – Intelligent Agents | University of Toronto, School of Continuing Studies
-> **Techniques:** Bayesian Networks + Random Forest (Supervised ML)
-> **Language:** Python 3
-
 ---
 
 ## Project Overview
